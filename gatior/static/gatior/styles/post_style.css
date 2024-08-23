@@ -96,7 +96,7 @@
     border-bottom-right-radius: var(--standart-border-radius);
 }
 
-#content .content-container .comments-section .comments-container {
+#content .content-container .comments-section, #comment-list {
     gap: 40px;
 }
 
@@ -175,6 +175,9 @@
         max-width: 100%;
         border: none;
         border-radius: 0px;
+        height: fit-content;
+        overflow: visible;
+
     }
     #content .content-container .post-section .post-container {
         max-height: none;

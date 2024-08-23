@@ -19,7 +19,7 @@
                     </div>
                 </a>
                 {% if post.user == user %}
-                    <button class="delete-button" id="delete-post-button">
+                    <button class="delete-button" id="delete-post-button" onclick="deletePost()">
                         <span class="material-symbols-outlined">delete</span>
                     </button>
                 {% endif %}
@@ -43,37 +43,38 @@
         </article>
     </section>
     <section class="comments-section" id="comments-section">
-        <div class="comments-container flex-column">
-            <section class="write-comment">
-                <form action="">
-                    <textarea id="write-comment-field" rows="5" placeholder="Write comment..."></textarea>
-                    <button id="write-comment-button" type="submit" class="write-comment-button">
-                        <span class="material-symbols-outlined">send</span>
-                      </button>
-                </form>
+        <div class="comments-container flex-column" id="comment-container">
+            <section class="write-comment flex-row">
+                <textarea id="write-comment-field" rows="5" placeholder="Write comment..."></textarea>
+                <button id="write-comment-button" type="submit" class="write-comment-button">
+                    <span class="material-symbols-outlined">send</span>
+                </button>
             </section>
-            {% for comment in comments %}
-                <article class="comment flex-column">
-                    <header class="comment-header">
-                        <div class="comment-info flex-row">
-                            <a class="flex-row" href="{% url 'blog:account' comment.user.username %}">
-                                <img class="author-icon" src="{{ comment.user.get_profile_picture_url }}">
-                                <div class="comment-info-text flex-column">
-                                    <span>{{ comment.user.get_full_name }}</span>
-                                    <span class="comment-date secondary">{{ comment.created_at }}</span>
-                                </div>
-                            </a>
-                        </div>
-                        <button class="delete-button">
-                            <span class="material-symbols-outlined">delete</span>
-                        </button>
-                    </header>
-                    <p class="comment-body">
-                        {{ comment.body|linebreaksbr }}
-                    </p>
-                </article>            
-            {% endfor %}
-
+            <div id="comment-list" class="flex-column">
+                {% for comment in comments %}
+                    <article class="comment flex-column" id="comment-{{ comment.pk }}">
+                        <header class="comment-header">
+                            <div class="comment-info flex-row">
+                                <a class="flex-row" href="{% url 'blog:account' comment.user.username %}">
+                                    <img class="author-icon" src="{{ comment.user.get_profile_picture_url }}">
+                                    <div class="comment-info-text flex-column">
+                                        <span>{{ comment.user.get_full_name }}</span>
+                                        <span class="comment-date secondary">{{ comment.created_at }}</span>
+                                    </div>
+                                </a>
+                            </div>
+                            {% if comment.user.pk == user.pk %}
+                                <button class="delete-button" id="delete-comment-{{ comment.pk }}"  onclick="deleteComment({{ comment.pk }})">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            {% endif %}
+                        </header>
+                        <p class="comment-body">
+                            {{ comment.body|linebreaksbr }}
+                        </p>
+                    </article>            
+                {% endfor %}
+            </div>
         </div>
     </section>
 </div>
@@ -106,9 +107,11 @@ like_post_button.onclick = function() {
         return response.json();
     })
     .then(data => {
-        initPostLikeHTML(data.liked_by_user, data.like_count)
+        initPostLikeHTML(data.liked_by_user, data.like_count);
     })
-
+    .then(function() {
+        chatSocket.send(create_message(""));
+    })
 }
 
 
@@ -156,6 +159,123 @@ function initPostLike() {
         initPostLikeHTML(data.liked_by_user, data.like_count)
     });
 }
+
+// ------------- Sockets -------------
+const postRoomID = JSON.parse({{ post.pk }});
+
+const chatSocket = new WebSocket(
+    'ws://'
+    + window.location.host
+    + '/ws/post/'
+    + postRoomID
+    + '/'
+);
+
+
+
+// Get WebSocket message from Server
+chatSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    if (data.delete_post) {
+        window.location.replace("{% url 'blog:feed' %}");
+    }
+    if (data.comment.body.length > 0) {
+        addComment(data)
+    }
+    if (data.delete_pk.length > 0) {
+        comment_to_delete = document.getElementById(`comment-${data.delete_pk}`);
+        if (comment_to_delete != null) { 
+            comment_to_delete.remove();
+        }
+    }
+    post_like_count.innerHTML = data.like_count
+};
+
+// Error handling
+chatSocket.onclose = function(e) {
+    console.error('Chat socket closed unexpectedly');
+};
+
+write_comment_button = document.getElementById('write-comment-button');
+
+// Publidh comment and send WebSocket
+write_comment_button.onclick = function(e) {
+    const writeCommentField = document.getElementById('write-comment-field');
+    chatSocket.send(create_message(writeCommentField.value));
+    writeCommentField.value = '';
+};
+
+let comment_list = document.getElementById("comment-list")
+
+// Create comment HTML element
+function addComment(data) {
+    comment = data.comment;
+
+    let delete_button_html = ""
+    if (comment.user_pk == {{ user.pk }}) {
+        delete_button_html = `
+            <button class="delete-button" id="delete-comment-${comment.pk}" onclick="deleteComment(${ comment.pk })">
+                <span class="material-symbols-outlined">delete</span>
+            </button>
+        `
+    }
+
+
+    comment_list.innerHTML = `
+    <article class="comment flex-column" id="comment-${comment.pk}">
+        <header class="comment-header">
+            <div class="comment-info flex-row">
+                <a class="flex-row" href="${comment.authors_url}">
+                    <img class="author-icon" src="${comment.authors_icon_url}">
+                    <div class="comment-info-text flex-column">
+                        <span>${comment.authors_full_name}</span>
+                        <span class="comment-date secondary">${comment.created_at}</span>
+                    </div>
+                </a>
+            </div>
+            ${delete_button_html}
+        </header>
+        <p class="comment-body">
+            ${comment.body}
+        </p>
+    </article>   
+    ` + comment_list.innerHTML;
+    // After adding comment link to button clears, so we need to relink it
+    write_comment_button = document.getElementById('write-comment-button');
+}
+
+function deleteComment(pk) {
+    chatSocket.send(create_message("", pk.toString()));
+}
+
+function deletePost() {
+    chatSocket.send(create_message("", "", true));
+}
+
+function create_message(comment_body="", delete_pk="", delete_post=false) {
+    let message = new Object(); 
+    message.post_pk = {{ post.pk }};
+    message.user_pk = {{ user.pk }};
+
+    comment = new Object();
+
+    comment.body = comment_body;
+    comment.user_pk = {{ user.pk }};
+    comment.authors_url = "{% url 'blog:account' user.username %}";
+    comment.authors_icon_url = "{{ user.get_profile_picture_url }}";
+    comment.authors_full_name = "{{ user.get_full_name }}";
+    comment.created_at = "";
+    comment.pk = "";
+
+    message.comment = comment;
+
+    message.delete_pk = delete_pk;
+    message.delete_post = delete_post;
+
+    return JSON.stringify(message);
+}
+
+
 
 </script>
 {% endblock personal_script %}
