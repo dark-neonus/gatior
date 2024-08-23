@@ -1,0 +1,54 @@
+{% extends "gatior/base.html" %}
+{% load static %}
+
+{% block title %}Feed{% endblock title %}
+
+{% block personal_style_url %}{% static 'gatior/styles/feed_style.css' %}{% endblock personal_style_url %}
+
+
+{% block content %}
+    <div class="content-container">
+        {% for post in posts %}
+            <article class="post flex-column" id="post-{{ post.pk }}">
+                <header class="post-header">
+                    <a class="post-info flex-row" href="{% url 'blog:account' post.user.username %}">
+                        <img class="author-icon" src="{{ post.user.get_profile_picture_url }}">
+                        <div class="post-header-text flex-column">
+                            <span class="post-author-name">{{ post.user.get_full_name }}</span>
+                            <span class="post-author-name secondary">{{ post.created_at }}</span>
+                        </div>
+                    </a>
+                </header>
+                <a class="post-image-container" href="{% url 'blog:post' post.pk %}">
+                    <img class="post-image" src="{{ post.image.url }}">
+                </a>
+                <div class="post-actions flex-row">
+                    <button id="post-like-button-{{ post.pk }}" class="like-post-container flex-row like-button">
+                        <span id="post-like-count-{{ post.pk }}" class="like-count">{{ post.likes_count }}</span>
+                        <span class="material-symbols-outlined">favorite</span>
+                    </button>
+                    <a id="post-comments-info-{{ post.pk }}" class="post-comments-info flex-row" href="{% url 'blog:post' post.pk %}">
+                        <span id="post-comments-count-{{ post.pk }}" class="comments-count">{{ post.comments_count }}</span>
+                        <span class="material-symbols-outlined">chat_bubble</span>
+                    </a>
+                </div>
+                <p class="post-body" id="post-body-{{ post.pk }}">
+                    {% if post.body|length > 80 %}
+                        {{ post.body|slice:":77" }}
+                        <a class="secondary" href="{% url 'blog:post' post.pk %}"><b>...</b></a>
+                    {% else %}
+                        {{ post.body }}
+                    {% endif %}
+                </p>
+            </article>        
+        {% endfor %}
+    </div>
+{% endblock content %}
+
+{% block personal_script %}
+<script src="{% static 'gatior/scripts/feed_page.js' %}"></script>
+<script>
+
+
+</script>
+{% endblock personal_script %}

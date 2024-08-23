@@ -1,0 +1,46 @@
+{% extends "gatior/base.html" %}
+
+{% load static %}
+
+{% block title %}User Detail{% endblock title %}
+
+{% block personal_style_url %}{% static 'gatior/styles/account_style.css' %}{% endblock personal_style_url %}
+
+
+{% block content %}
+<!-- Django template centent block here -->
+<header class="profile-header">
+    <div class="profile-header-container">
+        <img id="profile-picture" src="{{ account.get_profile_picture_url }}">
+        <div class="profile-info-container">
+            <div class="main-profile-info">
+                <span id="profile-name">{{ account.get_full_name }}</span>
+                <span id="profile-username">@{{ account.username }}</span>
+                <span id="profile-joined">Joined: {{ account.date_joined }}</span>
+            </div>
+            <span id="profile-post-count">{{ posts|length }} posts</span>
+        </div>
+    </div>
+</header>
+<div class="profile-body">
+    <div class="profile-posts-container-pseudo">
+        <hr>
+        <div class="profile-posts-container">
+            {% for post in posts %}
+                <article class="profile-post" style="background-image: url({{ post.image.url }});">
+                    <a href="{% url 'blog:post' post.pk %}">
+                        <div class="hide-square">
+                            <div class="post-info">
+                                <span class="post-info-icon">{{post.likes_count}} <span class="material-symbols-outlined">favorite</span></span>
+                                <span class="post-info-icon">{{post.comments_count}} <span class="material-symbols-outlined">chat_bubble</span></span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+            {% endfor %}
+            
+        </div>
+    </div>
+</div>
+ 
+{% endblock content %}

@@ -1,0 +1,161 @@
+{% extends "gatior/base.html" %}
+{% load static %}
+
+{% block title %}Post Detail{% endblock title %}
+
+{% block personal_style_url %}{% static 'gatior/styles/post_style.css' %}{% endblock personal_style_url %}
+
+
+{% block content %}
+<div class="content-container">
+    <section class="post-section" id="post-section">
+        <article class="post-container" id="post-container">
+            <header class="post-header">
+                <a class="author-info flex-row" href="{% url 'blog:account' post.user.username %}">
+                    <img class="author-icon" src="{{ post.user.get_profile_picture_url }}">
+                    <div class="post-header-text flex-column">
+                        <span class="author-name">{{ post.user.get_full_name }}</span>
+                        <span class="post-date secondary">{{ post.created_at }}</span>
+                    </div>
+                </a>
+                {% if post.user == user %}
+                    <button class="delete-button" id="delete-post-button">
+                        <span class="material-symbols-outlined">delete</span>
+                    </button>
+                {% endif %}
+            </header>
+            <div class="image-container" id="post-image-container">
+                <button id="post-image-button">
+                    <img class="post-image" id="post-image" src="{{ post.image.url }}">
+                </button>
+            </div>
+            <div class="post-footer">
+                <div class="post-likes flex-row">
+                    <button id="like-post-button" class="like-button flex-row-centered">
+                        <span id="post-like-count">{{ like_count }}</span>
+                        <span id="like-post-icon" class="material-symbols-outlined">favorite</span>
+                    </button>
+                </div>
+            </div>
+            <p class="post-body">
+                {{ post.body|linebreaksbr }}
+            </p>
+        </article>
+    </section>
+    <section class="comments-section" id="comments-section">
+        <div class="comments-container flex-column">
+            <section class="write-comment">
+                <form action="">
+                    <textarea id="write-comment-field" rows="5" placeholder="Write comment..."></textarea>
+                    <button id="write-comment-button" type="submit" class="write-comment-button">
+                        <span class="material-symbols-outlined">send</span>
+                      </button>
+                </form>
+            </section>
+            {% for comment in comments %}
+                <article class="comment flex-column">
+                    <header class="comment-header">
+                        <div class="comment-info flex-row">
+                            <a class="flex-row" href="{% url 'blog:account' comment.user.username %}">
+                                <img class="author-icon" src="{{ comment.user.get_profile_picture_url }}">
+                                <div class="comment-info-text flex-column">
+                                    <span>{{ comment.user.get_full_name }}</span>
+                                    <span class="comment-date secondary">{{ comment.created_at }}</span>
+                                </div>
+                            </a>
+                        </div>
+                        <button class="delete-button">
+                            <span class="material-symbols-outlined">delete</span>
+                        </button>
+                    </header>
+                    <p class="comment-body">
+                        {{ comment.body|linebreaksbr }}
+                    </p>
+                </article>            
+            {% endfor %}
+
+        </div>
+    </section>
+</div>
+{% endblock content %}
+
+{% block personal_script %}
+<script src="{% static 'gatior/scripts/post_page.js' %}"></script>
+<script>
+
+var like_post_button = document.getElementById("like-post-button");
+var like_post_icon = document.getElementById("like-post-icon");
+var post_like_count = document.getElementById("post-like-count");  
+
+like_post_button.onclick = function() {
+
+    fetch("{% url 'blog:like_post_button' post.pk %}", {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers:{
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        initPostLikeHTML(data.liked_by_user, data.like_count)
+    })
+
+}
+
+
+function initPostLikeHTML(liked_by_user, like_count) {
+    if (liked_by_user) {
+        if (!like_post_button.classList.contains("like-button-filled") && !like_post_button.classList.contains("like-button")) {
+            like_post_button.classList.add("like-button-filled");
+        }
+        else {
+            like_post_button.classList.replace("like-button", "like-button-filled");
+        }
+    } 
+    else {
+        if (!like_post_button.classList.contains("like-button-filled") && !like_post_button.classList.contains("like-button")) {
+            like_post_button.classList.add("like-button");
+        }
+        else {
+            like_post_button.classList.replace("like-button-filled", "like-button");
+        }
+        
+    };
+    post_like_count.innerHTML = like_count;
+}
+
+initPostLike();
+
+// Yep, this funtion repeat a lot from "like_post_button.onclick"
+function initPostLike() {
+    fetch("{% url 'blog:get_post_liked_status' post.pk %}", {
+        method: 'GET',
+        credentials: 'same-origin',
+        headers:{
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': csrftoken,
+        },
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        initPostLikeHTML(data.liked_by_user, data.like_count)
+    });
+}
+
+</script>
+{% endblock personal_script %}

@@ -1,0 +1,20 @@
+:root {
+    --theme-primary: var(--color-orange);
+    --theme-secondary: var(--color-gray);
+    --theme-secondaryDecoration: rgb(29, 29, 29);
+    
+    --theme-background: var(--color-white);
+    
+    --theme-surfacePrimary: var(--color-white);
+    --theme-surfaceActive: var(--color-grayLight2);
+    --theme-surface: var(--color-grayLight2);
+    --theme-surfaceSecondary: var(--color-grayLight1);
+    --theme-surfaceSecondaryDecorator: rgb(14, 75, 80);
+    
+    --theme-inSurfacePrimary: var(--color-white);
+    --theme-inSurface: var(--color-grayLight2);
+    --theme-inSurfaceSecondary: var(--color-grayLight1);
+
+    --theme-textPrimary: var(--color-black);
+}
+

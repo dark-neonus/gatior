@@ -1,0 +1,21 @@
+:root {
+    --color-white: rgb(250, 250, 250);
+    --color-grayLight2: rgb(220, 220, 220);
+    --color-grayLight1: rgb(200, 200, 200);
+    --color-gray: rgb(120, 120, 120);
+    --color-grayDark1: rgb(100, 100, 100);
+    --color-grayDark2: rgb(81, 81, 81);
+    --color-black: rgb(51, 51, 51);
+    --color-blackDark1: rgb(40, 40, 40);
+    --color-blackDark2: rgb(20, 20, 20);
+    
+
+    /* --color-yellowTint1: rgb(); */
+
+    --color-cherry: rgb(155,41,72);
+    --color-softCherry: rgb(255,102,93);
+    --color-pastelOrange: rgb(252, 243, 228);
+    --color-pastelYellow: rgb(255,205,116);
+    --color-orange: rgb(255,151,55);
+    --color-softOrange: rgb(212, 136, 64);
+}

@@ -1,0 +1,134 @@
+img.author_icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+}
+
+img.button_icon {
+    width: 20px;
+    height: 20px;
+    -webkit-user-drag: none;
+    transition: all 200ms;
+}
+
+img.button_icon:hover {
+    width: 23px;
+    height: 23px;
+}
+
+ul.author_info {
+    list-style-type:none;
+    display: inline-flex;
+}
+
+ul.author_info li {
+    vertical-align: middle;
+}
+
+ul.feed_list {
+    display: table;
+    margin: 0 auto;
+}
+
+ul li.post {
+    width: 400px;
+    background-color: blanchedalmond;
+    border-radius: 10px;
+    list-style: none;
+    display: block;
+    padding: 10px;
+    margin: 30px;
+}
+
+li.post img.post_image {
+    width: 400px;
+    height: 400px;
+}
+
+li.post p {
+    max-width: 400px;
+}
+
+.post_body, .comment_body {
+    white-space: pre-wrap;
+}
+
+
+#post_details {
+    width: 600px;
+    max-width: 600px;
+    background-color: antiquewhite;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    display: table;
+    margin: 0 auto;
+}
+#post_details img.post_image {
+    width: 600px;
+    height: 600px;
+}
+
+#comment_section {
+    display: table;
+    margin: 0 auto;
+    padding: 0px 200px 0px 0px;
+}
+
+#comment_section li.comment {
+    background-color: blanchedalmond;
+    list-style: none;
+    display: table;
+    border-radius: 10px;
+    width: 400px;
+    padding: 10px;
+    margin: 10px;
+}
+
+div.profile_header {
+    height: 400px;
+    background-color:aquamarine;
+    flex: 0 1 auto;
+}
+
+ul.profile_header {
+    vertical-align: middle;
+    background-color:green;
+    display: inline-flex;
+
+}
+
+li.profile_header {
+    vertical-align: middle;
+    display: inline-block;
+    list-style: none;
+    background-color: aqua;
+    margin: 10px;
+}
+
+#profile_picture {
+    width: 300px;
+    height: 300px;
+    border-radius: 150px;
+}
+
+#profile_info li {
+    list-style: none;
+    display: block;
+    margin: 10px;
+}
+
+div#profile_content {
+    flex: 0 1 auto;
+}
+
+ul#profile_content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Centers the posts horizontally */
+    padding: 10px; 
+}
+
+li.profile_post {
+    margin: 0px;
+}

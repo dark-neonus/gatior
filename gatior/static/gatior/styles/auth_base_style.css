@@ -1,0 +1,81 @@
+#in-page {
+    padding-right: 0%;
+}
+
+#content {
+    background: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#content .content-container {
+    width: 500px;
+    max-width: 100%;
+    height: 100%;
+}
+
+#content .content-container .main-area {
+    background-color: var(--theme-inSurface);
+    padding: 30px;
+    width: 100%;
+    border-radius: var(--standart-border-radius);
+}
+
+#content .content-container .main-area form {
+    gap: 20px;
+}
+
+#content .content-container .main-area form label {
+    gap: 5px;
+    width: 100%;
+}
+
+#content .content-container .main-area form hr {
+    border: 1px solid var(--theme-secondary);
+}
+
+#content .content-container .main-area form .passwords-field {
+    gap: 5px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+#content .content-container .main-area form #action-button {
+    background-color: var(--theme-inSurfacePrimary);
+    padding: 15px;
+    margin: 10px 0px 5px 0px;
+    width: 100%;
+    border-radius: var(--standart-border-radius);
+}
+
+#content .content-container .main-area form #action-button:hover {
+    background-color: var(--theme-primary);
+    color: var(--theme-textPrimary);
+}
+
+
+
+@media only screen and (max-width: 768px) {
+    #content .content-container {
+        height: 100%;
+    }
+    
+    #content .content-container .main-area {
+        background-color: var(--theme-inSurface);
+        padding: 30px;
+        width: 100%;
+        height: 100%;
+        border-radius: 0%;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    #content .content-container .main-area form .passwords-field {
+        display: flex;
+        flex-direction: column;
+    }
+}
+

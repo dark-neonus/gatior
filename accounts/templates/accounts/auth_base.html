@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Gatior Page{% endblock %}</title>
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Theme -->
+    <link rel="stylesheet" name="color-palette" href="{% static 'gatior/styles/themes/color_palette.css' %}">
+    <link rel="stylesheet" id="theme-link" href="{% static 'gatior/styles/themes/light.css' %}">
+    <!-- Style -->
+    <link rel="stylesheet" name="style" href="{% block personal_style_url %}{% endblock personal_style_url %}">
+    <link rel="stylesheet" name="base-style" href="{% static 'gatior/styles/base_style.css' %}">
+    <link rel="stylesheet" name="auth-base-style" href="{% static 'gatior/styles/auth_base_style.css' %}">
+    <!-- Icons -->
+    <link rel="stylesheet" name="icons" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="icon" href="{% static 'gatior/images/attributes/logo-rounded.png' %}">
+</head>
+<body>
+    <!-- Header section -->
+    
+    <header>
+        <nav class="navbar" id="page-header">
+            <div class="container">
+                <div class="logo">
+                    <a href="{% url 'blog:feed' %}">
+                        <img src="{% static 'gatior/images/attributes/logo-rounded.png' %}">
+                    </a>
+                </div>
+                <div class="action_container">
+                    <div id="theme-icon">
+                        <button id="theme-switch-button">
+                            <span id="theme-switch-icon" class="material-symbols-outlined">dark_mode</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+
+    <!-- Main content -->
+
+    <main>
+        <div class="main_container">
+            <div class="in_page main_column" id="in-page">
+                <section id="content">
+                    <!-- Django template centent block here -->
+                    {% block content %}{% endblock %}
+                </section>
+
+                <footer>
+                    <hr>
+                    <div class="footer-content">
+                        <div class="container">
+                            <span class="material-symbols-outlined" id="like">memory</span>
+                            <span>Site was created to learn web dev</span>
+                            <span class="material-symbols-outlined">hub</span>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+            
+            
+        </div>
+    </main>
+    
+</body>
+{% comment %} <script src="{% static 'gatior/scripts/base.js' %}"></script> {% endcomment %}
+<!-- Theme script -->
+<script>
+// Cant move this script to base.js file because it use django templates for theme path'
+var dark_mode = false;
+
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    // dark mode
+    dark_mode = true;
+}
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+    const newColorScheme = event.matches ? "dark" : "light";
+});
+
+
+var theme_switch_button = document.getElementById("theme-switch-button");
+var theme_switch_icon = document.getElementById("theme-switch-icon");
+theme_switch_button.onclick = switchTheme;
+initTheme()
+
+function switchTheme() {
+    dark_mode = !dark_mode;
+    initTheme();
+}
+function initTheme() {
+    if (dark_mode) {
+        // Dark mode
+        document.getElementById('theme-link').setAttribute('href', "{% static 'gatior/styles/themes/dark.css' %}");
+        theme_switch_icon.innerHTML = "light_mode";
+    }
+    else {
+        // Light mode
+        document.getElementById('theme-link').setAttribute('href', "{% static 'gatior/styles/themes/light.css' %}");
+        theme_switch_icon.innerHTML = "dark_mode";
+    }
+}
+</script>
+{% block personal_script %}{% endblock personal_script %}
+
+</html>
+

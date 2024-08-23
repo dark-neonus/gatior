@@ -1,0 +1,73 @@
+{% extends "accounts/auth_base.html" %}
+
+{% block title %}Gatior Login{% endblock title %}
+
+{% block content %}
+{% comment %} <form method="POST"> {% endcomment %}
+	{% comment %} {% csrf_token %} {% endcomment %}
+	{% comment %} <h2>Login</h2> {% endcomment %}
+		{% comment %}  {% endcomment %}
+	{% comment %} {% for field in form %} {% endcomment %}
+	{% comment %} <p> {% endcomment %}
+		{% comment %} {% if field.errors %} {% endcomment %}
+		{% comment %} <ul class="errorlist"> {% endcomment %}
+			{% comment %} {% for error in field.errors %} {% endcomment %}
+			{% comment %} <li>{{ error }}</li> {% endcomment %}
+			{% comment %} {% endfor %} {% endcomment %}
+		{% comment %} </ul> {% endcomment %}
+		{% comment %} {% endif %} {% endcomment %}
+	 	{% comment %} {{ field.label_tag }} {{ field }} {% endcomment %}
+	{% comment %} </p> {% endcomment %}
+	{% comment %} {% endfor %} {% endcomment %}
+	{% comment %} <input type="submit" value="Login" /> {% endcomment %}
+{% comment %} </form> {% endcomment %}
+
+<div class="content-container">
+    <article class="main-area">
+        <form method="POST" id="register-form" class="flex-column">
+            {% csrf_token %}
+            <label class="flex-column" id="first-name-label" name="first-name-label">
+				<span>First Name</span>
+				<input type="text" id="first_name" name="first_name">
+			</label>
+			<label class="flex-column" id="last-name-label" name="last-name-label">
+				<span>Last Name</span>
+				<input type="text" id="last_name" name="last_name">
+			</label>
+			<hr>
+
+			<label class="flex-column" id="email-label" name="email-label">
+				<span>Email</span>
+				<input type="text" id="email" name="email">
+			</label>
+			<label class="flex-column" id="username-label" name="username-label">
+				<span>Username</span>
+				<input type="text" id="username" name="username">
+			</label>
+
+			<hr>
+
+			<div class="passwords-field">
+				<label class="flex-column" id="password1-label" name="password1-label">
+					<span>Password</span>
+					<input type="password" id="password1" name="password1">
+				</label>
+				<label class="flex-column" id="password2-label" name="password2-label">
+					<span>Confirm password</span>
+					<input type="password" id="password2" name="password2">
+				</label>
+			</div>
+
+			<hr>
+
+            <button id="action-button" type="submit" class="action-button">
+                Register
+            </button>
+			<div class="login-field flex-column-centered">
+				<span class="secondary">Already have an account? <a href="{% url 'auth:login' %}">Login into it</a></span>
+			</div>
+		</form>
+    </article>
+</div>
+
+{% endblock content%}

@@ -1,0 +1,31 @@
+{% extends "gatior/base.html" %}
+{% load static %}
+
+{% block title %}Create post{% endblock title %}
+
+{% block personal_style_url %}{% static 'gatior/styles/create_post_style.css' %}{% endblock personal_style_url %}
+
+
+{% block content %}
+<div class="content-container">
+    <article class="post">
+        <form method="POST" id="create-post-form" class="flex-column" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label class="post-image-container" name="image" id="post-image-container">
+                <input type="file" accept="image/*" id="upload-image" name="image">
+                <span id="select-image-text">Select image</span>
+            </label>
+            <textarea id="post-body" rows="10" name="body" placeholder="Post text..."></textarea>
+            <button id="publish-button" type="submit" class="publish-button">
+                Publish
+            </button>
+        </form>
+    </article>
+</div>
+{% endblock content %}
+
+{% block personal_script %}
+<script src="{% static 'gatior/scripts/create_post_page.js' %}"></script>
+<script>
+</script>
+{% endblock personal_script %}

@@ -1,0 +1,47 @@
+{% extends "accounts/auth_base.html" %}
+
+{% block title %}Gatior Login{% endblock title %}
+
+{% block content %}
+{% comment %} <form method="POST"> {% endcomment %}
+	{% comment %} {% csrf_token %} {% endcomment %}
+	{% comment %} <h2>Login</h2> {% endcomment %}
+		{% comment %}  {% endcomment %}
+	{% comment %} {% for field in form %} {% endcomment %}
+	{% comment %} <p> {% endcomment %}
+		{% comment %} {% if field.errors %} {% endcomment %}
+		{% comment %} <ul class="errorlist"> {% endcomment %}
+			{% comment %} {% for error in field.errors %} {% endcomment %}
+			{% comment %} <li>{{ error }}</li> {% endcomment %}
+			{% comment %} {% endfor %} {% endcomment %}
+		{% comment %} </ul> {% endcomment %}
+		{% comment %} {% endif %} {% endcomment %}
+	 	{% comment %} {{ field.label_tag }} {{ field }} {% endcomment %}
+	{% comment %} </p> {% endcomment %}
+	{% comment %} {% endfor %} {% endcomment %}
+	{% comment %} <input type="submit" value="Login" /> {% endcomment %}
+{% comment %} </form> {% endcomment %}
+
+<div class="content-container">
+    <article class="main-area">
+        <form method="POST" id="login-form" class="flex-column">
+            {% csrf_token %}
+            <label class="flex-column" id="username-label" name="username-label">
+				<span>Username</span>
+				<input type="text" id="username" name="username">
+			</label>
+			<label class="flex-column" id="password-label" name="password-label">
+				<span>Password</span>
+				<input type="password" id="password" name="password">
+			</label>
+            <button id="action-button" type="submit" class="action-button">
+                Login
+            </button>
+			<div class="create-account-field flex-column-centered">
+				<span class="secondary">Don't have an account? <a href="{% url 'auth:register' %}">Create one</a></span>
+			</div>
+		</form>
+    </article>
+</div>
+
+{% endblock content%}
