@@ -170,3 +170,4 @@ raw/
 _old*.html
 *_old.html
 
+/static
