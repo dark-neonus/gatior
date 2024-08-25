@@ -1,0 +1,41 @@
+{% extends "gatior/base.html" %}
+{% load static %}
+
+{% block title %}Edit account info{% endblock title %}
+
+{% block personal_style_url %}{% static 'gatior/styles/account_settings_style.css' %}{% endblock personal_style_url %}
+
+
+{% block content %}
+<div class="content-container">
+    <article class="account">
+        <form method="POST" id="form" class="flex-column" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label class="account-image-container" name="image" id="account-image-container" style="background-image: url({{ user.get_profile_picture_url }});">
+                <input type="file" accept="image/*" id="upload-image" name="profile_picture">
+                {% if user.profile_picture == None or user.profile_picture == null %}
+                    <span id="select-image-text">Select image</span>
+                {% endif %}
+            </label>
+            
+            <label class="flex-column" id="first-name-label" name="first-name-label">
+				<span>First name</span>
+				<input type="text" id="first_name" name="first_name" value="{{ user.first_name }}">
+			</label>
+            <label class="flex-column" id="last-name-label" name="last-name-label">
+				<span>Last name</span>
+				<input type="text" id="last_name" name="last_name" value="{{ user.last_name }}">
+			</label>
+            <button id="save-button" type="submit" class="save-button">
+                Save
+            </button>
+        </form>
+    </article>
+</div>
+{% endblock content %}
+
+{% block personal_script %}
+<script src="{% static 'gatior/scripts/account_settings_page.js' %}"></script>
+<script>
+</script>
+{% endblock personal_script %}

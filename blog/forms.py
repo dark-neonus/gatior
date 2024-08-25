@@ -2,7 +2,7 @@
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from accounts.models import Comment, Post
+from accounts.models import Comment, Post, Account  
     
 class CreatePostForm(forms.Form):
     image = forms.ImageField(required=True)
@@ -58,3 +58,32 @@ class CreateCommentForm(forms.Form):
             comment.save()
 
         return comment
+    
+class AccountSettingsForm(forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = ["profile_picture", "first_name", "last_name"]
+
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        account = self.user
+
+        print(self.cleaned_data)
+
+        if len(self.cleaned_data["first_name"]) > 0: 
+            account.first_name = self.cleaned_data["first_name"]
+
+        account.last_name = self.cleaned_data["last_name"]
+
+        if self.cleaned_data["profile_picture"]:
+            account.profile_picture = self.cleaned_data["profile_picture"]
+
+        if commit:
+            account.save()
+        return account
+    
+    

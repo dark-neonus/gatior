@@ -5,7 +5,7 @@ from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django.db.models import Count
 from accounts.models import Post, Comment, Account, Like
-from .forms import CreatePostForm, CreateCommentForm
+from .forms import CreatePostForm, CreateCommentForm, AccountSettingsForm
 
 class FeedView(generic.ListView):
     model = Post
@@ -107,6 +107,23 @@ class CreatePostView(generic.FormView):
         print(form.errors)
         return HttpResponse(f'{form.errors}')
 
+class AccountSettingsView(generic.FormView):
+    form_class = AccountSettingsForm
+    template_name = "blog/account_settings.html"
+    login_required = True
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, request.FILES, user=request.user)  # Pass the user
+        if form.is_valid():
+            account = form.save()
+            return redirect(reverse_lazy("blog:account", kwargs={'username': request.user.username}))
+        
+        # If form is invalid, re-render the page with the form data and error messages
+        return self.form_invalid(form)
+
+    def form_invalid(self, form):
+        print(form.errors)
+        return HttpResponse(f'{form.errors}')
 
 
 def delete_post(request, pk):

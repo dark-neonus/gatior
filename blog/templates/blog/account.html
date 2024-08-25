@@ -20,6 +20,13 @@
             </div>
             <span id="profile-post-count">{{ posts|length }} posts</span>
         </div>
+        <div class="settings-area">
+            <a href="{% url 'blog:account_settings' %}">
+                <span class="material-symbols-outlined">
+                    settings
+                </span>
+            </a>
+        </div>
     </div>
 </header>
 <div class="profile-body">
